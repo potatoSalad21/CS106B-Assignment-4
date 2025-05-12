@@ -1,0 +1,11 @@
+### Explanation of the Makefile
+- `PROGRAM = Fiso` → Defines the output executable name.
+- `OBJECTS = Fiso.o` → Lists object files required for compilation.
+- `CPPOPTIONS = -IStanfordCPPLib -fvisibility-inlines-hidden` → Sets include paths and visibility options.
+- `LDOPTIONS = -L.` → Specifies the directory where libraries are searched.
+- `LIB = -lStanfordCPPLib` → Links the compiled Stanford C++ Library.
+- `all: $(PROGRAM)` → The default rule, builds the program.
+- `$(PROGRAM): $(OBJECTS)` → Links the object file to create the final executable.
+- `$(OBJECTS): Fiso.cpp Makefile libStanfordCPPLib.a` → Compiles `Fiso.cpp` into an object file.
+- `libStanfordCPPLib.a:` → Ensures the library is built before compilation.
+- `clean:` → Removes compiled files to allow a fresh rebuild.

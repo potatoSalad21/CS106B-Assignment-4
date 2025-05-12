@@ -38,7 +38,7 @@ const string BIG_BOGGLE_CUBES[25]  = {
     "FIPRSY", "GORRVW", "HIPRRY", "NOOTUW", "OOOTTU"
 };
 
-const int HIGHLIGHT_TIME = 200;
+const int HIGHLIGHT_TIME = 400;
 
 /* Function prototypes */
 
@@ -63,7 +63,8 @@ void showTrail(vector<pair<int, int>>&);
 
 Lexicon engWords("EnglishWords.dat");
 vector<vector<int>> dirForDfs = {
-    {1,0}, {0,1}, {-1,0}, {0,-1}
+    {1,0}, {0,1}, {-1,0}, {0,-1},
+    {1,1}, {-1,1}, {1,-1}, {-1,-1}
 };
 
 /* Main program */
@@ -92,7 +93,7 @@ void runGame() {
         computerTurn(computerRes, board);
         checkGameState(playerRes, computerRes);
 
-        string resp = getLine("Stop playing? (type 'exit'): ");
+        string resp = getLine("Stop playing? (type 'exit' / anything else to continue): ");
         if (resp == "exit") break;
     }
 }
@@ -209,7 +210,7 @@ void computerTurn(int &score, vector<string> &board) {
 void backtrack(vector<string> &board, int i, int j, string &res,
          vector<vector<bool>> &visited, unordered_set<string> &wordSet) {
 
-    if (visited[i][j]) return;
+    if (i < 0 || i >= board.size() || j < 0 || j >= board[0].size() || visited[i][j]) return;
 
     res += board[i][j];
     if (engWords.contains(res) && res.size() >= 4) {
@@ -238,13 +239,15 @@ void calcScore(int &score, unordered_set<string> &wordSet) {
 }
 
 void checkGameState(int usrScore, int compScr) {
-    cout << (usrScore > compScr ? "YOU WON!!!" : "Computer won ") << endl;
+    cout << (usrScore > compScr ? "YOU WON!!!" : "Computer won... skill issue.") << endl;
 }
 
 void showTrail(vector<pair<int, int>>& trail) {
     for (auto& [r, c] : trail) {
         highlightCube(r, c, true);
         pause(HIGHLIGHT_TIME);
+    }
+    for (auto& [r, c] : trail) {
         highlightCube(r, c, false);
     }
 }
@@ -274,7 +277,7 @@ vector<string> createRandomBoard() {
 // gets valid user input for the game mode and game letters
 string getUserInput() {
     string gameMode = getLine("Choose a game mode (random / custom): ");
-    if (gameMode == "random")
+    if (gameMode != "custom")
         return "";
 
     string letters;
